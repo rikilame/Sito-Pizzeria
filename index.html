@@ -2,92 +2,50 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Courgette&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <title>Pizzeria Demo</title>
-    <style>
-        /* Stessi stili di prima */
-        body { background: linear-gradient(135deg, #f5a623, #f76b1c); font-family: 'Poppins', sans-serif; }
-        .centrata { display: block; margin: 0 auto; width: 50%; max-height: 90vh; object-fit: cover; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        nav { text-align: center; margin: 20px 0; }
-        .box-link { display: inline-block; padding: 20px 40px; margin: 10px; background-color: #947444; color: white; text-decoration: none; border-radius: 10px; transition: transform 0.2s, background-color 0.2s; cursor: pointer; }
-        .box-link:hover { transform: scale(1.1); background-color: #ffa500; }
-        #invia { padding: 10px 10px; font-size: 16px; background-color: orange; color: white; border-radius: 10px; cursor: pointer; }
-        #invia:hover { background-color: darkorange; }
-        form input { padding: 10px; font-size: 16px; margin-bottom: 10px; width: 100%; max-width: 180px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        h2 { font-family: 'Courgette', cursive; font-size: 36px; color: white; text-shadow: 10px 10px 10px white; }
-        .card { background-color: rgba(255,255,255,0.8); border-radius: 15px; padding: 2px; margin: 15px; display: inline-block; width: 250px; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-<header>
-    <nav>
-        <p style="font-size:50px; color:white;">NOMEPIZZERIA</p>
-        <img src="foto/Pizza.jpg" alt="Nome Locale" class="centrata">
-        <br><br><br>
-        <button id="prenota" class="box-link">Prenota un tavolo</button>
-        <a href="#menu" class="box-link">Il nostro menù</a>
-        <a href="#about" class="box-link">Chi siamo</a>
-        <a href="#contact" class="box-link">Contatti</a>
+    <h1>NOMEPIZZERIA</h1>
 
-        <div class="card">
-            <h3>Pizza Margherita</h3>
-            <p>Pomodoro, mozzarella e basilico fresco</p>
-        </div>
+    <form id="form-prenotazione">
+        <input type="text" placeholder="Nome" required>
+        <input type="tel" placeholder="Numero di telefono" required pattern="[0-9]{10}">
+        <input type="number" placeholder="Numero di persone" required min="1" max="20">
+        <input type="time" placeholder="Orario" required>
+        <button type="submit">Invia</button>
+    </form>
 
-        <section id="menu"><h2>Il nostro menù</h2></section>
-        <section id="about"><h2>Chi siamo</h2></section>
-        <section id="contact"><h2>Contatti</h2></section>
+    <script>
+        const form = document.getElementById("form-prenotazione");
 
-        <section id="prenota-tavolo">
-            <h2>Prenota un tavolo</h2>
-            <form id="form-prenotazione">
-                <input type="text" placeholder="Nome" required>
-                <input type="tel" placeholder="Numero di telefono" required pattern="[0-9]{10}">
-                <input type="number" placeholder="Numero di persone" required min="1" max="20">
-                <input type="time" placeholder="Orario" required>
-                <button type="submit" id="invia">Invia</button>
-            </form>
-        </section>
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const nome = form.querySelector('input[type="text"]').value.trim();
+            const telefono = form.querySelector('input[type="tel"]').value.trim();
+            const persone = form.querySelector('input[type="number"]').value.trim();
+            const orario = form.querySelector('input[type="time"]').value.trim();
 
-    </nav>
-</header>
+            if(!nome || !/^[0-9]{10}$/.test(telefono)){
+                alert("Dati non validi");
+                return;
+            }
 
-<script>
-const btn = document.getElementById("prenota");
-btn.addEventListener("click", function() {
-    document.getElementById("prenota-tavolo").scrollIntoView({ behavior: "smooth"});
-});
-
-const form = document.getElementById("form-prenotazione");
-form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const nome = form.querySelector('input[type="text"]').value.trim();
-    const telefono = form.querySelector('input[type="tel"]').value.trim();
-    const persone = form.querySelector('input[type="number"]').value.trim();
-    const orario = form.querySelector('input[type="time"]').value.trim();
-
-    if(nome === "" || !/^[0-9]{10}$/.test(telefono)){
-        alert("Inserisci nome e telefono validi!");
-        return;
-    }
-    if(!((orario >= "12:00" && orario <= "15:00") || (orario >= "18:30" && orario <= "23:30"))){
-        alert("Orario non disponibile.");
-        return;
-    }
-
-    const dati = { nome, telefono, persone, orario };
-    const response = await fetch("https://sito-pizzeria-4hzy.onrender.com/prenota", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dati)
-    });
-    const result = await response.json();
-    alert(result.message);
-    form.reset();
-});
-</script>
-
+            const dati = { nome, telefono, persone, orario };
+            try {
+                const response = await fetch("https://sito-pizzeria-4hzy.onrender.com/prenotazioni", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dati)
+                });
+                const result = await response.json();
+                alert(result.message);
+                form.reset();
+            } catch(err) {
+                alert("Errore nell'invio della prenotazione");
+                console.error(err);
+            }
+        });
+    </script>
 </body>
 </html>
