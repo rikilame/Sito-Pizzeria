@@ -1,108 +1,55 @@
-// server.js
-const express = require("express");
+import express from "express";
+import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+
 const app = express();
-const path = require("path");
-require("dotenv").config(); // per leggere le variabili da .env
-console.log("URL:", process.env.SUPABASE_URL);
-console.log("KEY:", process.env.SUPABASE_KEY);
-const { createClient } = require("@supabase/supabase-js");
+const PORT = process.env.PORT || 3000;
 
-// Configura Supabase
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
+app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname));
 
-// Endpoint per inviare prenotazioni
-app.post("/prenota", async (req, res) => {
-  const { nome, telefono, persone, orario } = req.body;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-  if (!nome || !telefono || !persone || !orario) {
-    return res.status(400).json({ message: "Compila tutti i campi" });
-  }
+// Array in memoria per le prenotazioni
+let listaPrenotazioni = [];
 
-  try {
-    const { data, error } = await supabase
-      .from("prenotazioni")
-      .insert([{ nome, telefono, persone, orario }]);
-
-    if (error) throw error;
-
-    res.json({ message: "Prenotazione salvata!" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Errore durante il salvataggio" });
-  }
+// Endpoint per inviare una prenotazione
+app.post("/prenota", (req, res) => {
+    const { nome, telefono, persone, orario } = req.body;
+    if (!nome || !telefono || !persone || !orario) {
+        return res.status(400).json({ message: "Dati mancanti" });
+    }
+    const nuovaPrenotazione = {
+        id: Date.now(),
+        nome,
+        telefono,
+        persone,
+        orario,
+        giorno: new Date().toISOString()
+    };
+    listaPrenotazioni.push(nuovaPrenotazione);
+    res.json({ message: "Prenotazione ricevuta!" });
 });
 
-// Endpoint per vedere tutte le prenotazioni
-app.get("/prenotazioni", async (req, res) => {
-  try {
-    const { data, error } = await supabase.from("prenotazioni").select("*");
-
-    if (error) throw error;
-
-    let html = `
-      <html>
-        <head>
-          <title>Prenotazioni Pizzeria</title>
-          <style>
-            body { font-family: Arial; padding: 20px; }
-            table { border-collapse: collapse; width: 100%; }
-            th, td { border: 1px solid #ccc; padding: 8px; }
-            th { background-color: orange; color: white; }
-          </style>
-        </head>
-        <body>
-          <h1>Lista Prenotazioni</h1>
-          <table>
-            <tr>
-              <th>Nome</th>
-              <th>Telefono</th>
-              <th>Persone</th>
-              <th>Orario</th>
-              <th>Giorno</th>
-            </tr>
-    `;
-
-   data.forEach(p => {
-  const giorno = new Date(p.giorno).toLocaleString("it-IT", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: "Europe/Rome"
-  });
-  
-  html += `
-    <tr>
-      <td>${p.nome}</td>
-      <td>${p.telefono}</td>
-      <td>${p.persone}</td>
-      <td>${p.orario}</td>
-      <td>${giorno}</td>
-    </tr>
-  `;
+// Endpoint per ottenere tutte le prenotazioni (JSON)
+app.get("/prenotazioni", (req, res) => {
+    res.json(listaPrenotazioni);
 });
 
-    html += `</table></body></html>`;
-    res.send(html);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Errore nel recupero delle prenotazioni");
-  }
-});
-
-// Serve la pagina principale
+// Serve i file HTML
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+    res.sendFile(path.join(__dirname, "index.html"));
+});
+app.get("/prenotazioni.html", (req, res) => {
+    res.sendFile(path.join(__dirname, "prenotazioni.html"));
 });
 
-// Avvia il server
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server in ascolto su http://localhost:${port}`);
+// Serve cartelle suoni e foto
+app.use("/suoni", express.static(path.join(__dirname, "suoni")));
+app.use("/foto", express.static(path.join(__dirname, "foto")));
+
+app.listen(PORT, () => {
+    console.log(`Server avviato sulla porta ${PORT}`);
 });
