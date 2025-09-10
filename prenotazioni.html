@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Prenotazioni Staff</title>
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f7f7f7; text-align: center; }
+        table { margin: 20px auto; border-collapse: collapse; width: 80%; }
+        th, td { border: 1px solid #ccc; padding: 10px; }
+        th { background-color: orange; color: white; }
+    </style>
+</head>
+<body>
+    <h1>Lista Prenotazioni</h1>
+    <table id="tabella-prenotazioni">
+        <tr>
+            <th>Nome</th>
+            <th>Telefono</th>
+            <th>Persone</th>
+            <th>Orario</th>
+            <th>Giorno</th>
+        </tr>
+    </table>
+
+<script>
+let lastPrenotazioniIds = [];
+
+async function controllaPrenotazioni() {
+    try {
+        const response = await fetch("https://sito-pizzeria-4hzy.onrender.com/prenotazioni");
+        const data = await response.json();
+
+        // Aggiorna tabella
+        let html = `<tr>
+            <th>Nome</th><th>Telefono</th><th>Persone</th><th>Orario</th><th>Giorno</th>
+        </tr>`;
+        data.forEach(p => {
+            html += `<tr>
+                <td>${p.nome}</td>
+                <td>${p.telefono}</td>
+                <td>${p.persone}</td>
+                <td>${p.orario}</td>
+                <td>${new Date(p.giorno).toLocaleString()}</td>
+            </tr>`;
+        });
+        document.getElementById("tabella-prenotazioni").innerHTML = html;
+
+        // Beep se nuove prenotazioni
+        const currentIds = data.map(p => p.id);
+        if(lastPrenotazioniIds.length && currentIds.length > lastPrenotazioniIds.length){
+            const audio = new Audio('beep.mp3'); // il file beep nella stessa cartella
+            audio.play();
+        }
+        lastPrenotazioniIds = currentIds;
+
+    } catch(err) { console.error(err); }
+}
+
+// Controlla ogni 5 secondi
+setInterval(controllaPrenotazioni, 5000);
+controllaPrenotazioni();
+</script>
+
+</body>
+</html>
