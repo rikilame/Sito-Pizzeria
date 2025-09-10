@@ -3,6 +3,8 @@ const express = require("express");
 const app = express();
 const path = require("path");
 require("dotenv").config(); // per leggere le variabili da .env
+console.log("URL:", process.env.SUPABASE_URL);
+console.log("KEY:", process.env.SUPABASE_KEY);
 const { createClient } = require("@supabase/supabase-js");
 
 // Configura Supabase
