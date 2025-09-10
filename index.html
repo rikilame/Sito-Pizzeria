@@ -154,19 +154,7 @@ th {
             </form>
         </section>
 
-        <!-- Lista prenotazioni -->
-        <section id="lista-prenotazioni">
-            <h2>Ultime prenotazioni:</h2>
-            <table id="tabella-prenotazioni">
-                <tr>
-                    <th>Nome</th>
-                    <th>Telefono</th>
-                    <th>Persone</th>
-                    <th>Orario</th>
-                    <th>Giorno</th>
-                </tr>
-            </table>
-        </section>
+        
 
     </nav>
 </header>
@@ -220,34 +208,6 @@ async function controllaPrenotazioni() {
         const response = await fetch("https://sito-pizzeria-4hzy.onrender.com/prenotazioni");
         const data = await response.json(); // server deve restituire JSON
 
-        // crea tabella HTML
-        let html = `
-        <table>
-            <tr>
-                <th>Nome</th>
-                <th>Telefono</th>
-                <th>Persone</th>
-                <th>Orario</th>
-                <th>Giorno</th>
-            </tr>
-        `;
-        data.forEach(p => {
-            html += `
-            <tr>
-                <td>${p.nome}</td>
-                <td>${p.telefono}</td>
-                <td>${p.persone}</td>
-                <td>${p.orario}</td>
-                <td>${new Date(p.giorno).toLocaleString()}</td>
-            </tr>
-            `;
-        });
-        html += `</table>`;
-
-        // Aggiorna solo la tabella, non l'intera pagina
-        const container = document.getElementById("tabella-prenotazioni");
-        container.innerHTML = html;
-
         // Suono se ci sono nuove prenotazioni
         const currentIds = data.map(p => p.id);
         if (lastPrenotazioniIds.length && currentIds.length > lastPrenotazioniIds.length) {
@@ -263,6 +223,12 @@ async function controllaPrenotazioni() {
 // Start polling
 setInterval(controllaPrenotazioni, pollInterval);
 controllaPrenotazioni(); // subito al caricamento
+
+if (true) { // forza il beep
+    const audio = new Audio('https://www.soundjay.com/button/beep-07.mp3');
+    audio.play();
+}
+
 </script>
 
 </body>
