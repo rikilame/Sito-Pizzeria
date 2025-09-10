@@ -64,6 +64,8 @@
         const response = await fetch("https://sito-pizzeria-4hzy.onrender.com/prenotazioni");
         const data = await response.json();
 
+        console.log("Dati prenotazioni ricevuti:", data); // DEBUG
+
         // costruisci tabella
         let html = `
           <tr>
@@ -77,20 +79,20 @@
         data.forEach(p => {
           html += `
             <tr>
-              <td>${p.nome}</td>
-              <td>${p.telefono}</td>
-              <td>${p.persone}</td>
-              <td>${p.orario}</td>
-              <td>${new Date(p.giorno).toLocaleString("it-IT")}</td>
+              <td>${p.nome || "-"}</td>
+              <td>${p.telefono || "-"}</td>
+              <td>${p.persone || "-"}</td>
+              <td>${p.orario || "-"}</td>
+              <td>${p.giorno ? new Date(p.giorno).toLocaleString("it-IT") : "-"}</td>
             </tr>
           `;
         });
         document.getElementById("tabella-prenotazioni").innerHTML = html;
 
-        // controllo se ci sono nuove prenotazioni
+        // beep se ci sono nuove prenotazioni
         const currentIds = data.map(p => p.id);
         if (lastPrenotazioniIds.length && currentIds.length > lastPrenotazioniIds.length) {
-          const audio = new Audio("suoni/notifica.mp3"); // assicurati di avere beep.mp3 nella stessa cartella
+          const audio = new Audio("suoni/notifica.mp3"); // metti il file nella cartella "suoni"
           audio.play().catch(err => console.log("Audio non riprodotto:", err));
         }
         lastPrenotazioniIds = currentIds;
@@ -100,7 +102,7 @@
       }
     }
 
-    // avvio polling
+    // polling automatico
     setInterval(caricaPrenotazioni, pollInterval);
     caricaPrenotazioni(); // subito al caricamento
   </script>
