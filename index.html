@@ -194,7 +194,7 @@ h2 {
           const dati = { nome, telefono, persone, orario };
 
 
-        const response = await fetch("http://localhost:3000/prenota", {
+        const response = await fetch("/prenota", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dati)
