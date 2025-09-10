@@ -67,17 +67,25 @@ app.get("/prenotazioni", async (req, res) => {
             </tr>
     `;
 
-    data.forEach(p => {
-      html += `
-        <tr>
-          <td>${p.nome}</td>
-          <td>${p.telefono}</td>
-          <td>${p.persone}</td>
-          <td>${p.orario}</td>
-          <td>${p.giorno}</td>
-        </tr>
-      `;
-    });
+   data.forEach(p => {
+  const giorno = new Date(p.giorno).toLocaleString("it-IT", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+  
+  html += `
+    <tr>
+      <td>${p.nome}</td>
+      <td>${p.telefono}</td>
+      <td>${p.persone}</td>
+      <td>${p.orario}</td>
+      <td>${giorno}</td>
+    </tr>
+  `;
+});
 
     html += `</table></body></html>`;
     res.send(html);
