@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courgette&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <title>Pizzeria Demo</title>
+</head>
+<style>
+   .card {
+    background-color: rgba(255, 255, 255, 0.8); /* sfondo bianco trasparente */
+    border-radius: 15px;                       /* angoli arrotondati */
+    padding: 2px;                             /* spazio interno */
+    margin: 15px;                              /* spazio esterno */
+    display: inline-block;                     /* le card stanno una accanto all’altra */
+    width: 250px;                              /* larghezza fissa */
+    transition: transform 0.2s;                /* rende animabile la trasformazione */
+}
+
+.card:hover {
+    transform: translateY(-10px);  /* la card si solleva leggermente */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* aggiunge ombra */
+}
+    h2 {
+    font-family: 'Courgette', cursive;
+    font-size: 36px;
+    color: rgb(255, 255, 255);
+    text-shadow: 10px 10px 10px rgb(255, 255, 255);
+}
+    body {
+       background: linear-gradient(135deg, #f5a623, #f76b1c);
+    }
+     .centrata {
+        display: block;       /* trasforma l'immagine in blocco per usare margin */
+        margin: 0 auto;       /* centra orizzontalmente */
+        width: 50%;         /* larghezza */
+        max-height: 90vh; 
+        object-fit: cover;
+         border-radius: 20px;
+         box-shadow: 0 10px 30px rgba(0,0,0,0.3);        
+  }
+      nav {
+        text-align: center; /* centra i link orizzontalmente */
+        margin: 20px 0;     /* margine sopra e sotto */
+      }
+
+      nav a {
+        margin: 0 15px;     /* spazio tra i link */
+        text-decoration: none;
+        font-size: 18px;
+        color: darkorange;  /* colore dei link */
+       }
+      .box-link {
+        display: inline-block;
+        padding: 20px 40px;
+        margin: 10px;
+        background-color: #947444;
+        color: white;
+        text-decoration: none;
+        font-family: 'Courgette', sans-serif;
+        font-size: 20px;
+        border-radius: 10px;
+        transition: transform 0.2s, background-color 0.2s;
+
+        border: none;        /* rimuove eventuali bordi */
+        outline: none;       /* rimuove il bordo di focus */
+}
+
+.box-link:focus {
+        outline: none;       /* rimuove il bordo quando il link è selezionato */
+}
+.box-link:hover {
+    transform: scale(1.1);
+    background-color: #ffa500;
+    box-shadow:  5px 15px rgba(0, 0, 0, 0.11);
+}
+    #invia {
+        padding: 10px 10px;   /* aumenta l’area cliccabile */
+        font-size: 16px;      /* aumenta la dimensione del testo */
+        background-color: orange; /* colore di sfondo */
+        color: white;         /* colore del testo */
+        border:  solid;        /* rimuove il bordo predefinito */
+        border-radius: 10px;   /* angoli arrotondati */
+        cursor: pointer;      
+    }
+    #invia:hover {
+        background-color: darkorange;
+    }
+   form input {
+        padding: 10px;           /* spazio interno al campo */
+        font-size: 16px;         /* testo più leggibile */
+        margin-bottom: 10px;     /* spazio tra i campi */
+        width: 100%;             /* riempie tutta la larghezza disponibile */
+        max-width: 180px;        /* larghezza massima */
+        border: 1px solid #ccc;  /* bordo leggero */
+        border-radius: 5px;      /* angoli arrotondati */
+        box-sizing: border-box;  /* include padding nel calcolo della larghezza */
+}
+nav a, .box-link, .centrata {
+    transition: all 0.3s ease-in-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+    animation: fadeIn 1s ease forwards;
+}
+
+</style>
+<body>
+   
+    <header>
+       
+        <nav>
+            <p align=center style="font-family: 'Poppins', cursive; font-size: 50px; color: white ; ">NOMEPIZZERIA</p>
+            <img src="foto/Pizza.jpg" alt="Nome Locale" class="centrata">
+            <br>
+            <br>
+            <br>
+            <br>
+            <button id="prenota" class="box-link">Prenota un tavolo</button>
+            <a href="#menu" class="box-link">Il nostro menù</a>
+            <a href="#about" class="box-link">Chi siamo</a>
+            <a href="#contact" class="box-link">Contatti</a>
+           
+            <div class="card">
+    <h3>Pizza Margherita</h3>
+    <p>Pomodoro, mozzarella e basilico fresco</p>
+            </div>
+       
+         <section id="menu">
+            <h2>Il nostro menù: </h2>
+        </section>
+
+        <section id="about">
+            <h2>Chi siamo</h2>
+        </section>
+
+        <section id="conctact">
+            <h2>Contatti</h2>
+        </section>
+
+         <section id="prenota-tavolo" >
+            <h2>Prenota un tavolo</h2>
+           <form id="form-prenotazione">
+            <input type="text" placeholder="Nome" required>
+            <input type="tel" placeholder="Numero di telefono" required pattern="[0-9]{10}">
+            <input type="number" placeholder="Numero di persone" required min="1" max="20">
+            <input type="time" placeholder="Orario" required>
+            <button type="submit" id="invia">Invia</button>
+           </form> 
+        </section>
+
+         
+       
+
+        </nav>
+
+    </header>
+    
+
+
+    <script>
+        const btn = document.getElementById("prenota");
+        btn.addEventListener("click", function() {
+            document.getElementById("prenota-tavolo").scrollIntoView({ behavior: "smooth"});
+        });
+
+            const form = document.getElementById("form-prenotazione");
+            form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const nome = form.querySelector('input[type="text"]').value.trim();
+            const telefono = form.querySelector('input[type="tel"]').value.trim();
+            const persone = form.querySelector('input[type="number"]').value.trim();
+            const orario = form.querySelector('input[type="time"]').value.trim();
+
+            if(nome == ""){
+                alert("Errore nella prenotazione! Inserisci un nome valido.");
+                return;
+            }
+            const regexTelefono = /^[0-9]{10}$/;
+            if(!regexTelefono.test(telefono)) {
+                alert("Inserisci un numero di telefono valido (10 cifre).");
+                return;
+            }
+            if(!((orario >= "12:00" && orario <= "15:00") || (orario >= "18:30" && orario <= "23:30"))){
+                alert("La pizzeria è aperta solo dalle 12:00 alle 15:00 e dalle 18:30 alle 23:30.");
+                return;
+            }
+            
+
+          const dati = { nome, telefono, persone, orario };
+
+
+        const response = await fetch("http://localhost:3000/prenota", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dati)
+        });
+
+        const result = await response.json();
+        alert(result.message);
+        form.reset();
+        });
+    </script>
+
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</html>
