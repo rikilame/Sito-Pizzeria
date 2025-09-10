@@ -115,6 +115,7 @@ th {
 }
 </style>
 <body>
+    <button onclick="testBeep()">Prova beep</button>
    
 <header>
     <nav>
@@ -211,7 +212,7 @@ async function controllaPrenotazioni() {
         // Suono se ci sono nuove prenotazioni
         const currentIds = data.map(p => p.id);
         if (lastPrenotazioniIds.length && currentIds.length > lastPrenotazioniIds.length) {
-            const audio = new Audio('https://www.soundjay.com/button/beep-07.mp3');
+            const audio = new Audio('notifica.mp3');
             audio.play();
         }
         lastPrenotazioniIds = currentIds;
@@ -224,8 +225,8 @@ async function controllaPrenotazioni() {
 setInterval(controllaPrenotazioni, pollInterval);
 controllaPrenotazioni(); // subito al caricamento
 
-if (true) { // forza il beep
-    const audio = new Audio('notifica.mp3');
+function testBeep() {
+    const audio = new Audio('beep.mp3'); // assicurati che il file sia nella stessa cartella
     audio.play();
 }
 
