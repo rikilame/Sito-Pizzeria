@@ -1,65 +1,59 @@
-const path = require("path");
 const express = require("express");
+const path = require("path");
+const sqlite3 = require("sqlite3").verbose();
 const app = express();
-const fs = require("fs");
-const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+
 app.use(express.json());
 app.use(express.static(__dirname));
 
+// Apri o crea il database
+const db = new sqlite3.Database("prenotazioni.db", (err) => {
+    if (err) console.error("Errore apertura DB:", err.message);
+    else console.log("Database pronto.");
+});
+
+// Crea la tabella prenotazioni se non esiste
+db.run(`CREATE TABLE IF NOT EXISTS prenotazioni (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    telefono TEXT NOT NULL,
+    persone INTEGER NOT NULL,
+    orario TEXT NOT NULL,
+    giorno TEXT NOT NULL
+)`);
+
+// Endpoint per salvare una prenotazione
 app.post("/prenota", (req, res) => {
     const { nome, telefono, persone, orario } = req.body;
-
-    // ✅ Controllo dei campi
     if (!nome || !telefono || !persone || !orario) {
         return res.status(400).json({ message: "Compila tutti i campi" });
     }
+    const giorno = new Date().toLocaleString();
 
-    const OraLocale = new Date().toLocaleString();
-    console.log(OraLocale); // prendiamo la data del momento della prenotazione
-
-    const record = [{ nome, telefono, persone, orario, giorno: OraLocale }];
-
-    const csvWriter = createCsvWriter({
-    path: 'prenotazioni.csv',
-    header: [
-        { id: 'nome', title: 'Nome' },
-        { id: 'telefono', title: 'Telefono' },
-        { id: 'persone', title: 'Persone' },
-        { id: 'orario', title: 'Orario' },
-        { id: 'giorno', title: 'Giorno' }
-    ],
-    append: fs.existsSync('prenotazioni.csv') // se esiste, aggiunge senza riscrivere
+    const sql = `INSERT INTO prenotazioni (nome, telefono, persone, orario, giorno) VALUES (?, ?, ?, ?, ?)`;
+    db.run(sql, [nome, telefono, persone, orario, giorno], function(err) {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ message: "Errore nel salvataggio" });
+        }
+        res.json({ message: "Prenotazione salvata!" });
+    });
 });
 
-    csvWriter.writeRecords(record)
-    .then(() => {
-        console.log('CSV aggiornato!');
-        res.json({ message: "Prenotazione salvata!" }); // <- qui
-    })
-    .catch(err => {
-        console.error(err);
-        res.status(500).json({ message: "Errore salvataggio CSV" });
-    });
-    });
-
-
-
-
+// Endpoint per vedere tutte le prenotazioni
 app.get("/prenotazioni", (req, res) => {
-    if (!fs.existsSync("prenotazioni.csv")) {
-        return res.send("<h1>Nessuna prenotazione</h1>");
-    }
+    db.all("SELECT * FROM prenotazioni ORDER BY id DESC", [], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).send("Errore lettura prenotazioni");
+        }
 
-    const data = fs.readFileSync("prenotazioni.csv", "utf8");
-    const righe = data.split("\n").filter(r => r); // rimuove righe vuote
-
-    let html = `
+        let html = `
         <html>
         <head>
             <title>Prenotazioni Pizzeria</title>
             <style>
-                body { font-family: Arial, sans-serif; padding: 20px; }
-                h1 { font-size: 28px; color: darkorange; }
+                body { font-family: Arial; padding: 20px; }
                 table { width: 100%; border-collapse: collapse; margin-top: 20px; }
                 th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
                 th { background-color: #f4a261; color: white; }
@@ -76,43 +70,47 @@ app.get("/prenotazioni", (req, res) => {
                     <th>Orario</th>
                     <th>Giorno</th>
                 </tr>
-    `;
-
-    righe.slice(1).forEach(riga => { // salta la prima riga (header CSV)
-        const [nome, telefono, persone, orario, giorno] = riga.split(",");
-        html += `
-            <tr>
-                <td>${nome}</td>
-                <td>${telefono}</td>
-                <td>${persone}</td>
-                <td>${orario}</td>
-                <td>${giorno}</td>
-            </tr>
         `;
-    });
+        rows.forEach(row => {
+            html += `
+                <tr>
+                    <td>${row.nome}</td>
+                    <td>${row.telefono}</td>
+                    <td>${row.persone}</td>
+                    <td>${row.orario}</td>
+                    <td>${row.giorno}</td>
+                </tr>
+            `;
+        });
 
-    html += `
+        html += `
             </table>
         </body>
         </html>
-    `;
+        `;
 
-    res.send(html);
+        res.send(html);
+    });
 });
 
+// Endpoint per cancellare tutte le prenotazioni
+app.get("/cancella", (req, res) => {
+    db.run("DELETE FROM prenotazioni", [], function(err) {
+        if (err) {
+            console.error(err.message);
+            return res.send("Errore durante la cancellazione");
+        }
+        res.send("<h1>Tutte le prenotazioni sono state cancellate!</h1>");
+    });
+});
 
+// Servi la pagina principale
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.get("/cancella", (req, res) => {
-    if (fs.existsSync("prenotazioni.csv")) {
-        fs.unlinkSync("prenotazioni.csv");
-        return res.send("<h1>Tutte le prenotazioni sono state cancellate!</h1>");
-    }
-    res.send("<h1>Nessun file da cancellare</h1>");
-});
-
-app.listen(3000, () => {
-    console.log("Server in ascolto su http://localhost:3000");
+// Avvia il server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server in ascolto su http://localhost:${PORT}`);
 });
