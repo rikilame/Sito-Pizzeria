@@ -204,6 +204,47 @@ h2 {
         alert(result.message);
         form.reset();
         });
+
+        const pollInterval = 5000; // ogni 5 secondi
+let lastPrenotazioni = [];
+
+async function aggiornaPrenotazioni() {
+    try {
+        const res = await fetch("/prenotazioni"); // chiama il server per ottenere le prenotazioni
+        const text = await res.text();
+
+        // Confronta con l'ultima lista
+        if (text !== lastPrenotazioni.join("")) {
+            lastPrenotazioni = text.split(""); // aggiorna la variabile
+            // Aggiorna una sezione della pagina con le prenotazioni
+            let div = document.getElementById("lista-prenotazioni");
+            if (!div) {
+                div = document.createElement("div");
+                div.id = "lista-prenotazioni";
+                div.style.position = "fixed";
+                div.style.bottom = "20px";
+                div.style.right = "20px";
+                div.style.backgroundColor = "rgba(255,255,255,0.9)";
+                div.style.padding = "15px";
+                div.style.border = "2px solid orange";
+                div.style.borderRadius = "10px";
+                div.style.maxHeight = "400px";
+                div.style.overflowY = "auto";
+                document.body.appendChild(div);
+            }
+            div.innerHTML = text;
+
+            // Suono di notifica
+            const audio = new Audio("https://freesound.org/data/previews/316/316847_4939433-lq.mp3");
+            audio.play();
+        }
+    } catch (err) {
+        console.error("Errore nel fetch delle prenotazioni:", err);
+    }
+}
+
+// avvia il polling
+setInterval(aggiornaPrenotazioni, pollInterval);
     </script>
 
 </body>
