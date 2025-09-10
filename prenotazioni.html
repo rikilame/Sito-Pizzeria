@@ -91,7 +91,7 @@
                 // beep se ci sono nuove prenotazioni
                 const currentIds = data.map(p => p.id);
                 if (lastPrenotazioniIds.length && currentIds.length > lastPrenotazioniIds.length) {
-                    const audio = new Audio("suoni/notifica.mp3");
+                    const audio = new Audio("suoni/beep.mp3");
                     audio.play().catch(err => console.log("Audio non riprodotto:", err));
                 }
                 lastPrenotazioniIds = currentIds;
