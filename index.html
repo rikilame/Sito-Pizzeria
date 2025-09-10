@@ -178,77 +178,91 @@ th {
     });
 
     const form = document.getElementById("form-prenotazione");
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const nome = form.querySelector('input[type="text"]').value.trim();
-        const telefono = form.querySelector('input[type="tel"]').value.trim();
-        const persone = form.querySelector('input[type="number"]').value.trim();
-        const orario = form.querySelector('input[type="time"]').value.trim();
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const nome = form.querySelector('input[type="text"]').value.trim();
+    const telefono = form.querySelector('input[type="tel"]').value.trim();
+    const persone = form.querySelector('input[type="number"]').value.trim();
+    const orario = form.querySelector('input[type="time"]').value.trim();
 
-        if(nome == ""){
-            alert("Errore nella prenotazione! Inserisci un nome valido.");
-            return;
-        }
-        const regexTelefono = /^[0-9]{10}$/;
-        if(!regexTelefono.test(telefono)) {
-            alert("Inserisci un numero di telefono valido (10 cifre).");
-            return;
-        }
-        if(!((orario >= "12:00" && orario <= "15:00") || (orario >= "18:30" && orario <= "23:30"))){
-            alert("La pizzeria è aperta solo dalle 12:00 alle 15:00 e dalle 18:30 alle 23:30.");
-            return;
-        }
+    if(nome === ""){
+        alert("Errore nella prenotazione! Inserisci un nome valido.");
+        return;
+    }
+    const regexTelefono = /^[0-9]{10}$/;
+    if(!regexTelefono.test(telefono)) {
+        alert("Inserisci un numero di telefono valido (10 cifre).");
+        return;
+    }
+    if(!((orario >= "12:00" && orario <= "15:00") || (orario >= "18:30" && orario <= "23:30"))){
+        alert("La pizzeria è aperta solo dalle 12:00 alle 15:00 e dalle 18:30 alle 23:30.");
+        return;
+    }
 
-        const dati = { nome, telefono, persone, orario };
-        const response = await fetch("/prenota", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(dati)
-        });
-
-        const result = await response.json();
-        alert(result.message);
-        form.reset();
+    const dati = { nome, telefono, persone, orario };
+    const response = await fetch("/prenota", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(dati)
     });
 
-    // ---- POLLING AUTOMATICO ----
-    let lastPrenotazioni = [];
-    async function controllaPrenotazioni() {
-        const response = await fetch("/prenotazioni");
-        const data = await response.json();
+    const result = await response.json();
+    alert(result.message);
+    form.reset();
+});
 
-        const tabella = document.getElementById("tabella-prenotazioni");
-        tabella.innerHTML = `
+// ---- Polling prenotazioni ----
+const pollInterval = 5000; // ogni 5 secondi
+let lastPrenotazioniIds = [];
+
+async function controllaPrenotazioni() {
+    try {
+        const response = await fetch("/prenotazioni");
+        const data = await response.json(); // server deve restituire JSON
+
+        // crea tabella HTML
+        let html = `
+        <table>
             <tr>
-              <th>Nome</th>
-              <th>Telefono</th>
-              <th>Persone</th>
-              <th>Orario</th>
-              <th>Giorno</th>
+                <th>Nome</th>
+                <th>Telefono</th>
+                <th>Persone</th>
+                <th>Orario</th>
+                <th>Giorno</th>
             </tr>
         `;
-
         data.forEach(p => {
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-              <td>${p.nome}</td>
-              <td>${p.telefono}</td>
-              <td>${p.persone}</td>
-              <td>${p.orario}</td>
-              <td>${new Date(p.giorno).toLocaleString()}</td>
+            html += `
+            <tr>
+                <td>${p.nome}</td>
+                <td>${p.telefono}</td>
+                <td>${p.persone}</td>
+                <td>${p.orario}</td>
+                <td>${new Date(p.giorno).toLocaleString()}</td>
+            </tr>
             `;
-            tabella.appendChild(tr);
         });
+        html += `</table>`;
 
-        if (data.length > lastPrenotazioni.length) {
+        // Aggiorna solo la tabella, non l'intera pagina
+        const container = document.getElementById("tabella-prenotazioni");
+        container.innerHTML = html;
+
+        // Suono se ci sono nuove prenotazioni
+        const currentIds = data.map(p => p.id);
+        if (lastPrenotazioniIds.length && currentIds.length > lastPrenotazioniIds.length) {
             const audio = new Audio('notifica.mp3');
             audio.play();
         }
-        lastPrenotazioni = data;
+        lastPrenotazioniIds = currentIds;
+    } catch (err) {
+        console.error("Errore nel polling prenotazioni:", err);
     }
+}
 
-    setInterval(controllaPrenotazioni, 5000);
-    controllaPrenotazioni(); // controllo subito all'avvio
+// Start polling
+setInterval(controllaPrenotazioni, pollInterval);
+controllaPrenotazioni(); // subito al caricamento
 </script>
 
 </body>
