@@ -8,93 +8,86 @@
 </head>
 <style>
    .card {
-    background-color: rgba(255, 255, 255, 0.8); /* sfondo bianco trasparente */
-    border-radius: 15px;                       /* angoli arrotondati */
-    padding: 2px;                             /* spazio interno */
-    margin: 15px;                              /* spazio esterno */
-    display: inline-block;                     /* le card stanno una accanto all’altra */
-    width: 250px;                              /* larghezza fissa */
-    transition: transform 0.2s;                /* rende animabile la trasformazione */
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    padding: 2px;
+    margin: 15px;
+    display: inline-block;
+    width: 250px;
+    transition: transform 0.2s;
 }
-
 .card:hover {
-    transform: translateY(-10px);  /* la card si solleva leggermente */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* aggiunge ombra */
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
-    h2 {
+h2 {
     font-family: 'Courgette', cursive;
     font-size: 36px;
     color: rgb(255, 255, 255);
     text-shadow: 10px 10px 10px rgb(255, 255, 255);
 }
-    body {
-       background: linear-gradient(135deg, #f5a623, #f76b1c);
-    }
-     .centrata {
-        display: block;       /* trasforma l'immagine in blocco per usare margin */
-        margin: 0 auto;       /* centra orizzontalmente */
-        width: 50%;         /* larghezza */
-        max-height: 90vh; 
-        object-fit: cover;
-         border-radius: 20px;
-         box-shadow: 0 10px 30px rgba(0,0,0,0.3);        
-  }
-      nav {
-        text-align: center; /* centra i link orizzontalmente */
-        margin: 20px 0;     /* margine sopra e sotto */
-      }
-
-      nav a {
-        margin: 0 15px;     /* spazio tra i link */
-        text-decoration: none;
-        font-size: 18px;
-        color: darkorange;  /* colore dei link */
-       }
-      .box-link {
-        display: inline-block;
-        padding: 20px 40px;
-        margin: 10px;
-        background-color: #947444;
-        color: white;
-        text-decoration: none;
-        font-family: 'Courgette', sans-serif;
-        font-size: 20px;
-        border-radius: 10px;
-        transition: transform 0.2s, background-color 0.2s;
-
-        border: none;        /* rimuove eventuali bordi */
-        outline: none;       /* rimuove il bordo di focus */
+body {
+    background: linear-gradient(135deg, #f5a623, #f76b1c);
 }
-
-.box-link:focus {
-        outline: none;       /* rimuove il bordo quando il link è selezionato */
+.centrata {
+    display: block;
+    margin: 0 auto;
+    width: 50%;
+    max-height: 90vh;
+    object-fit: cover;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);        
+}
+nav {
+    text-align: center;
+    margin: 20px 0;
+}
+nav a {
+    margin: 0 15px;
+    text-decoration: none;
+    font-size: 18px;
+    color: darkorange;
+}
+.box-link {
+    display: inline-block;
+    padding: 20px 40px;
+    margin: 10px;
+    background-color: #947444;
+    color: white;
+    text-decoration: none;
+    font-family: 'Courgette', sans-serif;
+    font-size: 20px;
+    border-radius: 10px;
+    transition: transform 0.2s, background-color 0.2s;
+    border: none;
+    outline: none;
 }
 .box-link:hover {
     transform: scale(1.1);
     background-color: #ffa500;
     box-shadow:  5px 15px rgba(0, 0, 0, 0.11);
 }
-    #invia {
-        padding: 10px 10px;   /* aumenta l’area cliccabile */
-        font-size: 16px;      /* aumenta la dimensione del testo */
-        background-color: orange; /* colore di sfondo */
-        color: white;         /* colore del testo */
-        border:  solid;        /* rimuove il bordo predefinito */
-        border-radius: 10px;   /* angoli arrotondati */
-        cursor: pointer;      
-    }
-    #invia:hover {
-        background-color: darkorange;
-    }
-   form input {
-        padding: 10px;           /* spazio interno al campo */
-        font-size: 16px;         /* testo più leggibile */
-        margin-bottom: 10px;     /* spazio tra i campi */
-        width: 100%;             /* riempie tutta la larghezza disponibile */
-        max-width: 180px;        /* larghezza massima */
-        border: 1px solid #ccc;  /* bordo leggero */
-        border-radius: 5px;      /* angoli arrotondati */
-        box-sizing: border-box;  /* include padding nel calcolo della larghezza */
+#invia {
+    padding: 10px 10px;
+    font-size: 16px;
+    background-color: orange;
+    color: white;
+    border: solid;
+    border-radius: 10px;
+    cursor: pointer;      
+}
+#invia:hover {
+    background-color: darkorange;
+}
+form input {
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    width: 100%;
+    max-width: 180px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 nav a, .box-link, .centrata {
     transition: all 0.3s ease-in-out;
@@ -103,34 +96,42 @@ nav a, .box-link, .centrata {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
-
 h2 {
     animation: fadeIn 1s ease forwards;
 }
-
+table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 600px;
+    margin: 10px auto;
+}
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+}
+th {
+    background-color: orange;
+    color: white;
+}
 </style>
 <body>
    
-    <header>
-       
-        <nav>
-            <p align=center style="font-family: 'Poppins', cursive; font-size: 50px; color: white ; ">NOMEPIZZERIA</p>
-            <img src="foto/Pizza.jpg" alt="Nome Locale" class="centrata">
-            <br>
-            <br>
-            <br>
-            <br>
-            <button id="prenota" class="box-link">Prenota un tavolo</button>
-            <a href="#menu" class="box-link">Il nostro menù</a>
-            <a href="#about" class="box-link">Chi siamo</a>
-            <a href="#contact" class="box-link">Contatti</a>
-           
-            <div class="card">
-    <h3>Pizza Margherita</h3>
-    <p>Pomodoro, mozzarella e basilico fresco</p>
-            </div>
-       
-         <section id="menu">
+<header>
+    <nav>
+        <p align=center style="font-family: 'Poppins', cursive; font-size: 50px; color: white;">NOMEPIZZERIA</p>
+        <img src="foto/Pizza.jpg" alt="Nome Locale" class="centrata">
+        <br><br><br><br>
+        <button id="prenota" class="box-link">Prenota un tavolo</button>
+        <a href="#menu" class="box-link">Il nostro menù</a>
+        <a href="#about" class="box-link">Chi siamo</a>
+        <a href="#contact" class="box-link">Contatti</a>
+
+        <div class="card">
+            <h3>Pizza Margherita</h3>
+            <p>Pomodoro, mozzarella e basilico fresco</p>
+        </div>
+
+        <section id="menu">
             <h2>Il nostro menù: </h2>
         </section>
 
@@ -138,138 +139,117 @@ h2 {
             <h2>Chi siamo</h2>
         </section>
 
-        <section id="conctact">
+        <section id="contact">
             <h2>Contatti</h2>
         </section>
 
-         <section id="prenota-tavolo" >
+        <section id="prenota-tavolo">
             <h2>Prenota un tavolo</h2>
-           <form id="form-prenotazione">
-            <input type="text" placeholder="Nome" required>
-            <input type="tel" placeholder="Numero di telefono" required pattern="[0-9]{10}">
-            <input type="number" placeholder="Numero di persone" required min="1" max="20">
-            <input type="time" placeholder="Orario" required>
-            <button type="submit" id="invia">Invia</button>
-           </form> 
+            <form id="form-prenotazione">
+                <input type="text" placeholder="Nome" required>
+                <input type="tel" placeholder="Numero di telefono" required pattern="[0-9]{10}">
+                <input type="number" placeholder="Numero di persone" required min="1" max="20">
+                <input type="time" placeholder="Orario" required>
+                <button type="submit" id="invia">Invia</button>
+            </form>
         </section>
 
-         
-       
+        <!-- Lista prenotazioni -->
+        <section id="lista-prenotazioni">
+            <h2>Ultime prenotazioni:</h2>
+            <table id="tabella-prenotazioni">
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefono</th>
+                    <th>Persone</th>
+                    <th>Orario</th>
+                    <th>Giorno</th>
+                </tr>
+            </table>
+        </section>
 
-        </nav>
+    </nav>
+</header>
 
-    </header>
-    
+<script>
+    const btn = document.getElementById("prenota");
+    btn.addEventListener("click", function() {
+        document.getElementById("prenota-tavolo").scrollIntoView({ behavior: "smooth"});
+    });
 
+    const form = document.getElementById("form-prenotazione");
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const nome = form.querySelector('input[type="text"]').value.trim();
+        const telefono = form.querySelector('input[type="tel"]').value.trim();
+        const persone = form.querySelector('input[type="number"]').value.trim();
+        const orario = form.querySelector('input[type="time"]').value.trim();
 
-    <script>
-        const btn = document.getElementById("prenota");
-        btn.addEventListener("click", function() {
-            document.getElementById("prenota-tavolo").scrollIntoView({ behavior: "smooth"});
-        });
+        if(nome == ""){
+            alert("Errore nella prenotazione! Inserisci un nome valido.");
+            return;
+        }
+        const regexTelefono = /^[0-9]{10}$/;
+        if(!regexTelefono.test(telefono)) {
+            alert("Inserisci un numero di telefono valido (10 cifre).");
+            return;
+        }
+        if(!((orario >= "12:00" && orario <= "15:00") || (orario >= "18:30" && orario <= "23:30"))){
+            alert("La pizzeria è aperta solo dalle 12:00 alle 15:00 e dalle 18:30 alle 23:30.");
+            return;
+        }
 
-            const form = document.getElementById("form-prenotazione");
-            form.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const nome = form.querySelector('input[type="text"]').value.trim();
-            const telefono = form.querySelector('input[type="tel"]').value.trim();
-            const persone = form.querySelector('input[type="number"]').value.trim();
-            const orario = form.querySelector('input[type="time"]').value.trim();
-
-            if(nome == ""){
-                alert("Errore nella prenotazione! Inserisci un nome valido.");
-                return;
-            }
-            const regexTelefono = /^[0-9]{10}$/;
-            if(!regexTelefono.test(telefono)) {
-                alert("Inserisci un numero di telefono valido (10 cifre).");
-                return;
-            }
-            if(!((orario >= "12:00" && orario <= "15:00") || (orario >= "18:30" && orario <= "23:30"))){
-                alert("La pizzeria è aperta solo dalle 12:00 alle 15:00 e dalle 18:30 alle 23:30.");
-                return;
-            }
-            
-
-          const dati = { nome, telefono, persone, orario };
-
-
+        const dati = { nome, telefono, persone, orario };
         const response = await fetch("/prenota", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dati)
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dati)
         });
 
         const result = await response.json();
         alert(result.message);
         form.reset();
+    });
+
+    // ---- POLLING AUTOMATICO ----
+    let lastPrenotazioni = [];
+    async function controllaPrenotazioni() {
+        const response = await fetch("/prenotazioni");
+        const data = await response.json();
+
+        const tabella = document.getElementById("tabella-prenotazioni");
+        tabella.innerHTML = `
+            <tr>
+              <th>Nome</th>
+              <th>Telefono</th>
+              <th>Persone</th>
+              <th>Orario</th>
+              <th>Giorno</th>
+            </tr>
+        `;
+
+        data.forEach(p => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${p.nome}</td>
+              <td>${p.telefono}</td>
+              <td>${p.persone}</td>
+              <td>${p.orario}</td>
+              <td>${new Date(p.giorno).toLocaleString()}</td>
+            `;
+            tabella.appendChild(tr);
         });
 
-        const pollInterval = 5000; // ogni 5 secondi
-let lastPrenotazioni = [];
-
-async function aggiornaPrenotazioni() {
-    try {
-        const res = await fetch("/prenotazioni"); // chiama il server per ottenere le prenotazioni
-        const text = await res.text();
-
-        // Confronta con l'ultima lista
-        if (text !== lastPrenotazioni.join("")) {
-            lastPrenotazioni = text.split(""); // aggiorna la variabile
-            // Aggiorna una sezione della pagina con le prenotazioni
-            let div = document.getElementById("lista-prenotazioni");
-            if (!div) {
-                div = document.createElement("div");
-                div.id = "lista-prenotazioni";
-                div.style.position = "fixed";
-                div.style.bottom = "20px";
-                div.style.right = "20px";
-                div.style.backgroundColor = "rgba(255,255,255,0.9)";
-                div.style.padding = "15px";
-                div.style.border = "2px solid orange";
-                div.style.borderRadius = "10px";
-                div.style.maxHeight = "400px";
-                div.style.overflowY = "auto";
-                document.body.appendChild(div);
-            }
-            div.innerHTML = text;
-
-            // Suono di notifica
-            const audio = new Audio("https://freesound.org/data/previews/316/316847_4939433-lq.mp3");
+        if (data.length > lastPrenotazioni.length) {
+            const audio = new Audio('notifica.mp3');
             audio.play();
         }
-    } catch (err) {
-        console.error("Errore nel fetch delle prenotazioni:", err);
+        lastPrenotazioni = data;
     }
-}
 
-// avvia il polling
-setInterval(aggiornaPrenotazioni, pollInterval);
-    </script>
+    setInterval(controllaPrenotazioni, 5000);
+    controllaPrenotazioni(); // controllo subito all'avvio
+</script>
 
 </body>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </html>
