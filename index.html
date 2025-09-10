@@ -132,7 +132,7 @@ th {
             <p>Pomodoro, mozzarella e basilico fresco</p>
         </div>
 
-         <button onclick="testBeep()">Prova beep</button>
+            
 
         <section id="menu">
             <h2>Il nostro menù: </h2>
@@ -214,7 +214,7 @@ async function controllaPrenotazioni() {
         // Suono se ci sono nuove prenotazioni
         const currentIds = data.map(p => p.id);
         if (lastPrenotazioniIds.length && currentIds.length > lastPrenotazioniIds.length) {
-            const audio = new Audio('notifica.mp3');
+            const audio = new Audio('suoni/notifica.mp3');
             audio.play();
         }
         lastPrenotazioniIds = currentIds;
@@ -227,10 +227,7 @@ async function controllaPrenotazioni() {
 setInterval(controllaPrenotazioni, pollInterval);
 controllaPrenotazioni(); // subito al caricamento
 
-function testBeep() {
-    const audio = new Audio('beep.mp3'); // assicurati che il file sia nella stessa cartella
-    audio.play();
-}
+
 
 </script>
 
